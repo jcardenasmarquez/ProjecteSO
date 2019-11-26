@@ -16,10 +16,16 @@ namespace Projecte_SO
     public partial class Form2 : Form
     {
         Socket server;
+        string mensaje;
         
         public Form2()
         {
             InitializeComponent();
+        }
+
+        public void DameMensaje(string mensaje)
+        {
+            this.mensaje = mensaje;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -29,38 +35,53 @@ namespace Projecte_SO
 
             else
             {
-                IPAddress direc = IPAddress.Parse("192.168.56.101");
-                IPEndPoint ipep = new IPEndPoint(direc, 9070);
-
-                server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                try
+                if (contra.Text == repetircontra.Text)
                 {
-                    server.Connect(ipep);
+                    IPAddress direc = IPAddress.Parse("192.168.56.102"); //entorn de produccio: 147.83.117.22, maquina virtual: 192.168.56.102
+                    IPEndPoint ipep = new IPEndPoint(direc, 9070);
 
-                    //PONGO EN MARCHA EL THREAD AQUI PORQUE TIENE QUE RECIBIR UNA RESPUESTA DEL SERVIDOR ANTES DE CONECTARSE A EL
-                    //el thread que atenderá los mensajes del servidor
-                    //ThreadStart ts = delegate { AtenderServidor(); };
-                    //atender = new Thread(ts);
-                    //atender.Start();
+                    server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    try
+                    {
+                        server.Connect(ipep);
 
+                        string mensaje = "5/" + usuari.Text + "/" + contra.Text + "/" + repetircontra.Text;
 
-                    string mensaje = "5/" + usuari.Text + "," + contra.Text + "," + repetircontra.Text;
+                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                        server.Send(msg);
 
-                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
-                    server.Send(msg);
+                    }
+
+                    catch (SocketException)
+                    {
+                        //Si hay excepcion imprimimos error y salimos del programa con return 
+                        MessageBox.Show("No he podido conectar con el servidor");
+                        return;
+                    }
+
+                    catch (NullReferenceException)
+                    {
+                        MessageBox.Show("Error. No he podido conectar con servidor");
+                    }
                 }
+                else
+                    MessageBox.Show("Les contrasenyes no coincideixen");
+            }
+        }
 
-                catch (SocketException)
-                {
-                    //Si hay excepcion imprimimos error y salimos del programa con return 
-                    MessageBox.Show("No he podido conectar con el servidor");
-                    return;
-                }
-
-                catch (NullReferenceException)
-                {
-                    MessageBox.Show("Error. No he podido conectar con servidor");
-                }
+        public void Resultado()
+        {
+            if (mensaje == "0")
+            {
+                MessageBox.Show("Usuari creat correctament");
+                this.Close();
+            }
+            else
+            {
+                if (mensaje == "-2")
+                    MessageBox.Show("Aquest usuari ja esta registrat a la BBDD");
+                else
+                    MessageBox.Show("Error creant l'usuari");
             }
         }
     }
