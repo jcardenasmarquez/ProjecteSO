@@ -214,7 +214,7 @@ void CercaJugador(MYSQL *conn,  char usuario[512], char contrasena [512], char b
 			if(row != NULL) // o sigui el jugador existeix
 			{
 				char query2[512];
-				sprintf(query2, "SELECT jugador.contraseña FROM jugador WHERE jugador.contraseña = '%s' AND jugador.id = '%s'", contrasena, usuario);
+				sprintf(query2, "SELECT jugador.contraseña FROM jugador WHERE jugador.id = '%s'", usuario);
 				
 				err = mysql_query (conn, query2); 
 				if (err!=0) {
@@ -380,7 +380,7 @@ void DameConectados(ListaConectados *lista, char conectados[100])
 
 int AnadirPartida(Partida tablapartidas[100], char usuario1[20], int socket1, char usuario2[20], int socket2, char usuario3[20], int socket3, char usuario4[20], int socket4)
 {
-	int i = 0;
+	int i=0;
 	int encontrado = 0;
 	while (i <100 && encontrado == 0) //bucle de busqueda de socket1 = -1
 	{
@@ -414,6 +414,7 @@ void *AtenderCliente(void *socket) //recibimos por referencia y no sabemos que e
 	char usuario[20];
 	char contrasena[20];
 	char consulta[512];
+
 	
 	
 	//Connexio basedades (hacerlo en una fucion aparte)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -460,10 +461,11 @@ void *AtenderCliente(void *socket) //recibimos por referencia y no sabemos que e
 		
 		char *p = strtok(buff, "/");
 		int codigo =  atoi (p);
+		int numForm;
 		
 		char msgtocl[512];
 		
-		printf("%d", codigo);
+		//printf("%d", codigo);
 		
 		if ((codigo == 0) || (codigo == 6))
 		{
@@ -560,16 +562,18 @@ void *AtenderCliente(void *socket) //recibimos por referencia y no sabemos que e
 		
 		else if (codigo ==5) //registrar usuari
 		{
+			//p = strtok( NULL, "/");
+			//numForm = atoi(p);
 			p = strtok( NULL, "/");
-			
 			strcpy (usuario, p);
 			p = strtok( NULL, "/");
 			strcpy (contrasena, p);
 			pthread_mutex_lock(&mutex);
-			int ok = AnadirCuenta(conn, usuario, contrasena);
+			int okr = AnadirCuenta(conn, usuario, contrasena);
 			pthread_mutex_unlock(&mutex);
-			sprintf(msgtocl, "5/%d", ok);
+			sprintf(msgtocl, "5/%d",okr);
 			printf(msgtocl);
+			
 		}
 		
 		else if (codigo==8)
@@ -581,8 +585,8 @@ void *AtenderCliente(void *socket) //recibimos por referencia y no sabemos que e
 			printf (num3);
 			char vectorCon[100];
 			DameConectados(&lista, vectorCon);
-			int num2 = vectorCon[0] -48;
-			if (num == num2)
+			int num2 = lista.num;
+			if (num == lista.num)
 				strcpy(msgtocl, "8/Si");
 			else
 				strcpy(msgtocl,"8/No");
@@ -636,8 +640,15 @@ void *AtenderCliente(void *socket) //recibimos por referencia y no sabemos que e
 				sprintf(respuesta, "10/%s,%d",j1,partida);
 				printf("el mensaje es: %s \n", respuesta);
 				//enviamos los mensajes a los clientes invitados
-				//hacetr el bucle para enviar a todos los invitados
-				write(socketsInv[0],respuesta,strlen(respuesta));
+				//hacer el bucle para enviar a todos los invitados
+				while( g <= 2)
+				{
+					if (socketsInv[g] != -1)
+					{
+						write(socketsInv[g],respuesta,strlen(respuesta));
+					}
+					g++;
+				}
 			}
 		}
 		else if(codigo==11)
@@ -667,13 +678,16 @@ void *AtenderCliente(void *socket) //recibimos por referencia y no sabemos que e
 		else if(codigo==20)
 		{
 			p = strtok(NULL, "/");
+			char xat[512];
+			char emisor[20];
+			strcpy(xat,p);
 			char mensaje[512];
-			strcpy(mensaje,p);
 			//enviar mensaje a los usuuarios contra los que juegues (a los que has invitado y a ti mismo)
 			//para que se puedan ir leyendo los mensajes y que fluya la conversacion
-			char emisor[20];
+			
 			DameUsuario(&lista,sock_conn,emisor);
-			sprintf(mensaje, "20/%s: %s", emisor, mensaje);
+			//sprintf(mensaje, "20/%s:%s \n", emisor, xat);
+			printf("%s\n", mensaje);
 			
 			int i;
 			int encontrado = 0;
@@ -687,12 +701,17 @@ void *AtenderCliente(void *socket) //recibimos por referencia y no sabemos que e
 			if(encontrado ==1)
 			{
 				if(tablapartidas[i].socket1 != -1)
+					sprintf(mensaje, "20/%s:%s/%s,%s,%s,%s, \n", emisor, xat,tablapartidas[i].usuario1,tablapartidas[i].usuario2,tablapartidas[i].usuario3,tablapartidas[i].usuario4);
+					printf(mensaje, "20/%s:%s/%s,%s,%s,%s, \n", emisor, xat,tablapartidas[i].usuario1,tablapartidas[i].usuario2,tablapartidas[i].usuario3,tablapartidas[i].usuario4);
 					write(tablapartidas[i].socket1, mensaje, strlen(mensaje));
 				if(tablapartidas[i].socket2 != -1)
+					sprintf(mensaje, "20/%s:%s/%s,%s,%s,%s, \n", emisor, xat,tablapartidas[i].usuario1,tablapartidas[i].usuario2,tablapartidas[i].usuario3,tablapartidas[i].usuario4);
 					write(tablapartidas[i].socket2, mensaje, strlen(mensaje));
 				if(tablapartidas[i].socket3 != -1)
+					sprintf(mensaje, "20/%s:%s/%s,%s,%s,%s, \n", emisor, xat,tablapartidas[i].usuario1,tablapartidas[i].usuario2,tablapartidas[i].usuario3,tablapartidas[i].usuario4);
 					write(tablapartidas[i].socket3, mensaje, strlen(mensaje));
 				if(tablapartidas[i].socket4 != -1)
+					sprintf(mensaje, "20/%s:%s/%s,%s,%s,%s, \n", emisor, xat,tablapartidas[i].usuario1,tablapartidas[i].usuario2,tablapartidas[i].usuario3,tablapartidas[i].usuario4);
 					write(tablapartidas[i].socket4, mensaje, strlen(mensaje));
 			}			
 			

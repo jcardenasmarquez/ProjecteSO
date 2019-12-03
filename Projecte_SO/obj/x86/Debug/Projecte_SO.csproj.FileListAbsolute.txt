@@ -97,3 +97,21 @@ C:\Users\gerar\OneDrive\Escritorio\Uni Gerard\doble grado\3º Carrera\3A\SO\V4SO
 C:\Users\gerar\OneDrive\Escritorio\Uni Gerard\doble grado\3º Carrera\3A\SO\V4SO\Projecte_SO\obj\x86\Debug\Projecte_SO.Form2.resources
 C:\Users\gerar\OneDrive\Escritorio\Uni Gerard\doble grado\3º Carrera\3A\SO\V4SO\Projecte_SO\obj\x86\Debug\Projecte_SO.Properties.Resources.resources
 C:\Users\gerar\OneDrive\Escritorio\Uni Gerard\doble grado\3º Carrera\3A\SO\V4SO\Projecte_SO\obj\x86\Debug\Projecte_SO.csproj.GenerateResource.Cache
+C:\Users\maria\Desktop\V5SO(2)\V5SO\Projecte_SO\obj\x86\Debug\Projecte_SO.exe
+C:\Users\maria\Desktop\V5SO(2)\V5SO\Projecte_SO\obj\x86\Debug\Projecte_SO.pdb
+C:\Users\maria\Desktop\V5SO(2)\V5SO\Projecte_SO\bin\Debug\Projecte_SO.exe
+C:\Users\maria\Desktop\V5SO(2)\V5SO\Projecte_SO\bin\Debug\Projecte_SO.pdb
+C:\Users\maria\Desktop\V5SO(2)\V5SO\Projecte_SO\obj\x86\Debug\Projecte_SO.csprojResolveAssemblyReference.cache
+C:\Users\maria\Desktop\V5SO(2)\V5SO\Projecte_SO\obj\x86\Debug\Projecte_SO.Form1.resources
+C:\Users\maria\Desktop\V5SO(2)\V5SO\Projecte_SO\obj\x86\Debug\Projecte_SO.Form2.resources
+C:\Users\maria\Desktop\V5SO(2)\V5SO\Projecte_SO\obj\x86\Debug\Projecte_SO.Properties.Resources.resources
+C:\Users\maria\Desktop\V5SO(2)\V5SO\Projecte_SO\obj\x86\Debug\Projecte_SO.csproj.GenerateResource.Cache
+D:\3A\SO\V5SO_1\Projecte_SO\obj\x86\Debug\Projecte_SO.exe
+D:\3A\SO\V5SO_1\Projecte_SO\obj\x86\Debug\Projecte_SO.pdb
+D:\3A\SO\V5SO_1\Projecte_SO\bin\Debug\Projecte_SO.exe
+D:\3A\SO\V5SO_1\Projecte_SO\bin\Debug\Projecte_SO.pdb
+D:\3A\SO\V5SO_1\Projecte_SO\obj\x86\Debug\Projecte_SO.csprojResolveAssemblyReference.cache
+D:\3A\SO\V5SO_1\Projecte_SO\obj\x86\Debug\Projecte_SO.Form1.resources
+D:\3A\SO\V5SO_1\Projecte_SO\obj\x86\Debug\Projecte_SO.Form2.resources
+D:\3A\SO\V5SO_1\Projecte_SO\obj\x86\Debug\Projecte_SO.Properties.Resources.resources
+D:\3A\SO\V5SO_1\Projecte_SO\obj\x86\Debug\Projecte_SO.csproj.GenerateResource.Cache

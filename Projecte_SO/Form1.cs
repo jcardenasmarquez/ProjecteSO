@@ -36,18 +36,90 @@ namespace Projecte_SO
         delegate void DelegadoParaFondo(System.Drawing.Color color);
         delegate void DelegadoParaVisible();
         delegate void DelegadoParaInvisible();
-        delegate void DelegadoPonMensajeLV(ListView lv, string mensaje, Color color);
+        delegate void DelegadoParaPonerListaConectados();
+        delegate void DelegadoPonMensajeRTBox(RichTextBox rtb, string mensaje, Color color, string[] usuaris_xat);
+        delegate void DelegadoParaRellenarInvitarBox(string[] missatgeinvitats);
 
         //funcions cross-threading
+        private void PonListaConectados()
+        {
+            conectadosGrid.ColumnCount = 1;
+            conectadosGrid.RowCount = conectados.Count;
+            for (int k = 0; k < conectados.Count; k++)
+            {
+                conectadosGrid.Rows[k].Cells[0].Value = conectados[k];
+
+            }   
+        }
+
+        private void RellenarInvitarBox(string[] missatgeinvitats)
+        {
+            jugadorqueinvitaLbl.Text = missatgeinvitats[0]; //error cross threading
+            partidaLbl.Text = missatgeinvitats[1];
+        }
+
         private void PonColor(System.Drawing.Color color)
         {
             this.BackColor = color;
         }
 
-        private void PonMensajeLV(ListView lv, string mensaje, Color color)
+        private void HazVisibleGroupBox1()
         {
-            lv.Items.Add(mensaje).ForeColor = color;
+            groupBox1.Visible = true;
         }
+
+        private void HazInvisibleGroupBox1()
+        {
+            groupBox1.Visible = false;
+        }
+
+        private void HazVisibleXatGroupBox()
+        {
+            xatGroupBox.Visible = true;
+        }
+
+        private void HazInvisibleXatGroupBox()
+        {
+            xatGroupBox.Visible = false;
+        }
+
+      
+
+        private void PonMensajeRTBox(RichTextBox rtb, string mensaje, Color color, string[] usuaris_xat)
+        {
+            string[] trozos = mensaje.Split(':');
+            if (trozos[0] == textBox1.Text)
+            {
+                rtb.SelectionAlignment = HorizontalAlignment.Right;
+                rtb.AppendText("Tu: ", color);
+                rtb.AppendText(trozos[1] + Environment.NewLine);
+                //rtb.ForeColor = Color.Black;
+            }
+            else
+            {
+                rtb.SelectionAlignment = HorizontalAlignment.Left;
+                if (trozos[0] == usuaris_xat[0])
+                {
+                    rtb.AppendText(trozos[0], Color.Red);
+                }
+                if (trozos[0] == usuaris_xat[1])
+                {
+                    rtb.AppendText(trozos[0], Color.Green);
+                }
+                if (trozos[0] == usuaris_xat[2])
+                {
+                    rtb.AppendText(trozos[0], Color.Coral);
+                }
+                if (trozos[0] == usuaris_xat[3])
+                {
+                    rtb.AppendText(trozos[0], Color.Purple);
+                }
+                
+                rtb.AppendText(": " + trozos[1] + Environment.NewLine);
+                //rtb.ForeColor = color;
+            }
+        }
+            
 
         public void HazVisible()
         {
@@ -64,8 +136,24 @@ namespace Projecte_SO
             button2.Visible = true;
             label6.Visible = true;
             conectadosGrid.Visible = true;
-            //label8.Visible = true;
-            //taulerdeJoc.Visible = true;
+            dimesinumConectados.Visible = true;
+            label9.Visible = true;
+            numconectadosBox.Visible = true;
+            label10.Visible = true;
+            invitarButton.Visible = true;
+            invitadosBox.Visible = true;
+        }
+
+        public void HazVisiblePanel()
+        {
+            label8.Visible = true;
+            taulerdeJoc.Visible = true;
+        }
+
+        public void HazInvisiblePanel()
+        {
+            label8.Visible = false;
+            taulerdeJoc.Visible = false;
         }
 
         public void HazInvisible()
@@ -85,12 +173,18 @@ namespace Projecte_SO
             conectadosGrid.Visible = false;
             label8.Visible = false;
             taulerdeJoc.Visible = false;
+            dimesinumConectados.Visible = false;
+            label9.Visible = false;
+            numconectadosBox.Visible = false;
+            label10.Visible = false;
+            invitarButton.Visible = false;
+            invitadosBox.Visible = false;
         }
 
         public Form1()
         {
             InitializeComponent();
-            CheckForIllegalCrossThreadCalls = false;
+            //CheckForIllegalCrossThreadCalls = false;
             label3.Visible = false;
             label4.Visible = false;
             label5.Visible = false;
@@ -106,8 +200,14 @@ namespace Projecte_SO
             conectadosGrid.Visible = false;
             label8.Visible = false;
             taulerdeJoc.Visible = false;
-            tercerConectado.Visible = false;
-            //groupBox1.Visible = false;
+            dimesinumConectados.Visible = false;
+            label9.Visible = false;
+            numconectadosBox.Visible = false;
+            groupBox1.Visible = false;
+            label10.Visible = false;
+            invitarButton.Visible = false;
+            invitadosBox.Visible = false;
+            xatGroupBox.Visible = false;
         }
 
         private void AtendreServidor()
@@ -141,6 +241,10 @@ namespace Projecte_SO
                                 this.Invoke(delegado, new object[] { System.Drawing.Color.Gray });
                                 DelegadoParaInvisible delegado3 = new DelegadoParaInvisible(HazInvisible);
                                 this.Invoke(delegado3);
+                                DelegadoParaInvisible delegado9 = new DelegadoParaInvisible(HazInvisibleGroupBox1);
+                                this.Invoke(delegado9);
+                                DelegadoParaInvisible delegado10 = new DelegadoParaInvisible(HazInvisibleXatGroupBox);
+                                this.Invoke(delegado10);
                                 server.Shutdown(SocketShutdown.Both);
                                 server.Close();
                                 atender.Abort();
@@ -193,13 +297,8 @@ namespace Projecte_SO
                                 i = i + 2;
                             }
 
-                            conectadosGrid.ColumnCount = 1;
-                            conectadosGrid.RowCount = conectados.Count;
-                            for (int k = 0; k < conectados.Count; k++)
-                            {
-                                conectadosGrid.Rows[k].Cells[0].Value = conectados[k];
-                                 
-                            }    
+                            DelegadoParaPonerListaConectados delegado20 = new DelegadoParaPonerListaConectados(PonListaConectados);
+                            this.Invoke(delegado20);
                             break;
                         case 8:
 
@@ -208,30 +307,36 @@ namespace Projecte_SO
                             break;
                         case 10:
 
-                            groupBox1.Visible = true;
+                            DelegadoParaVisible delegado11= new DelegadoParaVisible(HazVisibleGroupBox1);
+                            this.Invoke(delegado11);
                             string[] missatgeinvitats = missatge.Split(',');
-                            jugadorqueinvitaLbl.Text = missatgeinvitats[0];
-                            partidaLbl.Text = missatgeinvitats[1];
+                            groupBox1.Invoke(new DelegadoParaRellenarInvitarBox(RellenarInvitarBox), new object[] { missatgeinvitats });
 
                             break;
                         case 11: //accepta la partida
 
+                            DelegadoParaVisible delegado7 = new DelegadoParaVisible(HazVisibleXatGroupBox);
+                            this.Invoke(delegado7);
                             string[] resposta = missatge.Split(',');
                             MessageBox.Show(resposta[1] + " ha acceptat jugar la partida");
-                            taulerdeJoc.Visible = true;
-                            label8.Visible = true;
+                            DelegadoParaVisible delegado6 = new DelegadoParaVisible(HazVisiblePanel);
+                            this.Invoke(delegado6);
+                            
 
                             break;
                         case 12: //rebutja la partida
 
                             string[] resposta2 = missatge.Split(',');
                             MessageBox.Show(resposta2[1] + " ha rebutjat la petició de jugar la partida");
+                            DelegadoParaInvisible delegado8 = new DelegadoParaInvisible(HazInvisibleGroupBox1);
+                            this.Invoke(delegado8);
 
                             break;
 
                         case 20: //xat
-
-                            xatListView.Invoke(new DelegadoPonMensajeLV(PonMensajeLV), new object[] { xatListView, missatge, Color.Black });
+                            string usuaris = missatgerebut[2];
+                            string[] usuaris_xat = usuaris.Split(',');
+                            xatRichTextBox.Invoke(new DelegadoPonMensajeRTBox(PonMensajeRTBox), new object[] { xatRichTextBox, missatge, Color.Blue, usuaris_xat });
 
                             break;
                                         
@@ -425,10 +530,7 @@ namespace Projecte_SO
                         listainvitados = listainvitados + invitados[i] + "\n";
                         mensajeinvitados = mensajeinvitados + invitados[i] + "/";
                     }
-                    else
-                    {
-                        MessageBox.Show("Error. Invita a alguien que no seas tú mismo");
-                    }
+
                 }
                 MessageBox.Show("Has invitado a: " + listainvitados);
                 string mensaje = "10/" + mensajeinvitados;
@@ -444,12 +546,22 @@ namespace Projecte_SO
 
         private void conectadosGrid_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
         {
-            invitadosBox.AppendText(conectadosGrid.CurrentCell.Value.ToString() + Environment.NewLine);
-            invitados.Add(conectadosGrid.CurrentCell.Value.ToString());   
+            if (conectadosGrid.CurrentCell.Value.ToString() != textBox1.Text)
+            {
+                invitadosBox.AppendText(conectadosGrid.CurrentCell.Value.ToString() + Environment.NewLine);
+                invitados.Add(conectadosGrid.CurrentCell.Value.ToString());
+            }
+            else
+                MessageBox.Show("Error. Invita a alguien que no seas tú mismo");
         }
 
         private void acceptarRadioButton_Click(object sender, EventArgs e)
         {
+            DelegadoParaVisible delegado7 = new DelegadoParaVisible(HazVisibleXatGroupBox);
+            this.Invoke(delegado7);
+            DelegadoParaInvisible delegado5 = new DelegadoParaInvisible(HazInvisibleGroupBox1);
+            this.Invoke(delegado5);
+
             //enviar codigo, mi id y la partida
             string mensaje = "11/" + textBox1.Text + "/" + partidaLbl.Text;
             // Enviamos al servidor 
@@ -462,6 +574,9 @@ namespace Projecte_SO
 
         private void rebutjarRadioButton_Click(object sender, EventArgs e)
         {
+            DelegadoParaInvisible delegado5 = new DelegadoParaInvisible(HazInvisibleGroupBox1);
+            this.Invoke(delegado5);
+
             string mensaje = "12/" + textBox1.Text + "/" + partidaLbl.Text;
             // Enviamos al servidor 
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
@@ -479,5 +594,24 @@ namespace Projecte_SO
         }
 
     }
+
+    //Extensio del richtextbox per afegir colors
+    public static class RichTextBoxExtensions
+    {
+        public static void AppendText(this RichTextBox box, string text, Color color)
+        {
+            box.SelectionStart = box.TextLength;
+            box.SelectionLength = 0;
+
+            box.SelectionColor = color;
+            box.AppendText(text);
+            box.SelectionColor = box.ForeColor;
+        }
+    }
+
+
+
+
+
 }
 
