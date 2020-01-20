@@ -37,7 +37,7 @@ namespace Projecte_SO
             {
                 if (contra.Text == repetircontra.Text)
                 {
-                    IPAddress direc = IPAddress.Parse("192.168.56.103"); //entorn de produccio: 147.83.117.22, maquina virtual: 192.168.56.103
+                    IPAddress direc = IPAddress.Parse("192.168.56.102"); //entorn de produccio: 147.83.117.22, maquina virtual: 192.168.56.103
                     IPEndPoint ipep = new IPEndPoint(direc, 9050);
 
                     server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);

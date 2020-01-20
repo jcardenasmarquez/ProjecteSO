@@ -63,6 +63,16 @@ namespace Projecte_SO.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap parte_trasera {
+            get {
+                object obj = ResourceManager.GetObject("parte trasera", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap parte_trasera_carta_volteada {
             get {
                 object obj = ResourceManager.GetObject("parte_trasera_carta_volteada", resourceCulture);
